@@ -1,0 +1,77 @@
+class PersonalFinanceManager:
+    def __init__(self):
+        self.balance = 0
+        self.transactions = []
+
+    def add_income(self, amount, source):
+        self.balance += amount
+        self.transactions.append({"type": "income", "amount": amount, "source": source})
+        print(f"Income of {amount} added from {source}. Current balance: {self.balance}")
+
+    def add_expense(self, amount, category):
+        if amount > self.balance:
+            print("Insufficient balance to record this expense.")
+            return
+        self.balance -= amount
+        self.transactions.append({"type": "expense", "amount": amount, "category": category})
+        print(f"Expense of {amount} added to {category}. Current balance: {self.balance}")
+
+    def show_balance(self):
+        print(f"Your current balance is: {self.balance}")
+
+    def generate_report(self):
+        income_total = sum(t["amount"] for t in self.transactions if t["type"] == "income")
+        expense_total = sum(t["amount"] for t in self.transactions if t["type"] == "expense")
+
+        print("\n--- Personal Finance Report ---")
+        print("Total Income:", income_total)
+        print("Total Expenses:", expense_total)
+        print("Net Balance:", self.balance)
+        print("\nDetailed Transactions:")
+
+        for t in self.transactions:
+            t_type = t["type"].capitalize()
+            if t["type"] == "income":
+                print(f"{t_type}: {t['amount']} from {t['source']}")
+            else:
+                print(f"{t_type}: {t['amount']} on {t['category']}")
+
+def main():
+    pfm = PersonalFinanceManager()
+
+    while True:
+        print("\n--- Personal Finance Manager ---")
+        print("1. Add Income")
+        print("2. Add Expense")
+        print("3. Show Balance")
+        print("4. Generate Report")
+        print("5. Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            try:
+                amount = float(input("Enter income amount: "))
+                source = input("Enter income source: ")
+                pfm.add_income(amount, source)
+            except ValueError:
+                print("Please enter a valid amount.")
+        elif choice == "2":
+            try:
+                amount = float(input("Enter expense amount: "))
+                category = input("Enter expense category: ")
+                pfm.add_expense(amount, category)
+            except ValueError:
+                print("Please enter a valid amount.")
+        elif choice == "3":
+            pfm.show_balance()
+        elif choice == "4":
+            pfm.generate_report()
+        elif choice == "5":
+            print("Exiting Personal Finance Manager. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
